@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>数组和函数扩展</title>
+</head>
+
+<body>
+</body>
+<script>
+  //Array.from 将类似数组的对象和可遍历对象转为真正的数组
+  /* let arrayLike = {
+    '0':'a',
+    '1':'b',
+    '2':'c',
+    length:3
+  }
+  console.log(Array.from(arrayLike)) */ //数组对象必须设置长度才能转为真正的数组
+
+  //函数作用域
+  /* let foo = 'outer'
+  function bar(func = x => foo){
+    let foo = 'inner'
+    console.log(func()) //outer
+  }
+  bar() */
+  //箭头函数  箭头函数没有自己的this，不能使用call() apply() bind()去改变this指向
+  /* var handler = {
+    id:"123456",
+    init:function(){
+      document.addEventListener("click",
+      event => this.doSomething(event.type),false)
+    },
+
+    doSomething:function(type){
+      console.log('handling' + type + "for" + this.id)
+    }
+  }
+ 
+  function Timer(){
+    this.seconds = 0
+    setInterval(() => this.seconds++, 1000)
+  }
+
+  var timer = new Timer()
+  setTimeout(() => console.log(timer.seconds),3100) */
+
+  // 尾调用
+  /* function f(){
+    let m = 1
+    let n = 2
+    return g(m + n) 
+  }
+  f() */
+
+  // 尾递归
+  /* function factorial(n,total){
+    if(n===1) return total;
+    return factorial(n-1,n* total)
+  }
+  factorial(5,1) */
+
+  function currying(fn,n){
+    return function(m){
+      return fn.call(this,m,n)
+    }
+  }
+  function tailFactorial(n,total){
+    if(n === 1) return total
+    return tailFactorial(n - 1, n * total)
+  }
+  const factorial = currying(tailFactorial,1)
+  factorial(5)
+
+
+  // Symbol
+ /*  var obj = {}
+  var a = Symbol('a')
+  var b = Symbol.for('b')
+
+  obj[a] = 'Hello'
+  obj[b] = 'World'
+
+  var objectSymbols = Object.getOwnPropertySymbols(obj)
+  console.log(objectSymbols) */
+  
+  var size = Symbol('size')
+  class Collection{
+    constructor(){
+      this[size] = 0
+    }
+    add(item){
+      this[this[size]] = item;
+      this[size]++
+    }
+
+    static sizeOf(instance){
+      return instance[size]
+    }
+  }
+  var x = new Collection()
+  // console.log(Collection.sizeOf(x))
+
+  x.add('foo')
+  console.log(
+    Collection.sizeOf(x),
+    Object.keys(x),
+    Object.getOwnPropertyNames(x),
+    Object.getOwnPropertySymbols(x),
+    Object.getOwnPropertySymbols(x)
+  ) 
+
+
+</script>
+</html>
